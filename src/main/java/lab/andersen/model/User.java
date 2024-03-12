@@ -6,6 +6,7 @@ public class User implements Serializable {
 
     private int id;
     private int age;
+    private String name;
     private String surname;
 
     public User(int age, String surname) {
@@ -13,7 +14,7 @@ public class User implements Serializable {
         this.surname = surname;
     }
 
-    public User(int id, int age, String surname) {
+    public User(int id, int age, String surname, String name) {
         this.id = id;
         this.age = age;
         this.surname = surname;
@@ -35,6 +36,14 @@ public class User implements Serializable {
         this.age = age;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getSurname() {
         return surname;
     }
@@ -48,6 +57,7 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id +
                 ", age=" + age +
+                ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 '}';
     }

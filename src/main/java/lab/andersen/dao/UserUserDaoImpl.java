@@ -16,10 +16,10 @@ import java.util.Optional;
 
 public class UserUserDaoImpl implements UserDao {
 
-    private static final String FIND_ALL_USERS = "SELECT id, age, surname FROM users";
-    private static final String FIND_USER_BY_ID = "SELECT id, age, surname FROM users WHERE id = ?";
-    private static final String CREATE_USER = "INSERT INTO users(age, surname) VALUES (?, ?)";
-    private static final String UPDATE_USER = "UPDATE users SET age = ?, surname = ? WHERE id = ?";
+    private static final String FIND_ALL_USERS = "SELECT id, age, surname, name FROM users";
+    private static final String FIND_USER_BY_ID = "SELECT id, age, surname, name FROM users WHERE id = ?";
+    private static final String CREATE_USER = "INSERT INTO users(age, surname, name) VALUES (?, ?, ?)";
+    private static final String UPDATE_USER = "UPDATE users SET age = ?, surname = ?, name = ? WHERE id = ?";
     private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
 
     @Override
@@ -29,8 +29,12 @@ public class UserUserDaoImpl implements UserDao {
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(FIND_ALL_USERS);
             while (resultSet.next()) {
-                User user = new User(resultSet.getInt("age"), resultSet.getString("surname"));
-                user.setId(resultSet.getInt("id"));
+                User user = new User(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("age"),
+                        resultSet.getString("surname"),
+                        resultSet.getString("name")
+                );
                 allUsers.add(user);
             }
             connection.commit();
@@ -48,8 +52,12 @@ public class UserUserDaoImpl implements UserDao {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                user = new User(resultSet.getInt("age"), resultSet.getString("surname"));
-                user.setId(resultSet.getInt("id"));
+                user = new User(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("age"),
+                        resultSet.getString("surname"),
+                        resultSet.getString("name")
+                );
             }
             connection.commit();
         } catch (SQLException e) {
@@ -64,7 +72,7 @@ public class UserUserDaoImpl implements UserDao {
              PreparedStatement statement = connection.prepareStatement(CREATE_USER)) {
             statement.setInt(1, entity.getAge());
             statement.setString(2, entity.getSurname());
-            statement.executeUpdate();
+            statement.setString(3, entity.getName());
             connection.commit();
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -78,7 +86,8 @@ public class UserUserDaoImpl implements UserDao {
             if (findById(entity.getId()).isPresent()) {
                 statement.setInt(1, entity.getAge());
                 statement.setString(2, entity.getSurname());
-                statement.setInt(3, entity.getId());
+                statement.setString(3, entity.getName());
+                statement.setInt(4, entity.getId());
                 statement.executeUpdate();
                 connection.commit();
             } else {
