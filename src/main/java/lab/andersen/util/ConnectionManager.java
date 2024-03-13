@@ -23,7 +23,7 @@ public class ConnectionManager {
         private static final String JDBC_PASSWORD = System.getenv("JDBC_DATABASE_PASSWORD");
 
         static {
-            String jdbc_driver = System.getenv("JDBC_DRIVER");
+            String jdbc_driver = "org.postgresql.Driver";
             System.out.println(jdbc_driver);
             try {
                 Class.forName(jdbc_driver);
