@@ -15,7 +15,7 @@ public class AppContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         timer = new Timer(true);
-        timer.schedule(new SendPdfJob(), 0, 10000);
+        //timer.schedule(new SendPdfJob(), 0, 10000);
     }
 
     @Override
