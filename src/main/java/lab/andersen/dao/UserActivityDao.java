@@ -10,6 +10,8 @@ public interface UserActivityDao {
 
     List<UserActivity> findAll() throws DaoException;
 
+    List<UserActivity> findAllToday() throws DaoException;
+
     Optional<UserActivity> findById(int id) throws DaoException;
 
     void create(UserActivity entity) throws DaoException;

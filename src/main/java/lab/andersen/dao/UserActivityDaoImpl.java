@@ -20,12 +20,35 @@ public class UserActivityDaoImpl implements UserActivityDao {
     private static final String CREATE_USER_ACTIVITY = "INSERT INTO users_activities(user_id, description) VALUES (?, ?)";
     private static final String UPDATE_USER_ACTIVITY = "UPDATE users_activities SET user_id = ?, description = ? WHERE id = ?";
     private static final String DELETE_USER_ACTIVITY = "DELETE FROM users_activities WHERE id = ?";
+    private static final String FIND_ALL_TODAY_ACTIVITIES = "SELECT id, user_id, description, date_time FROM users_activities WHERE DATE(date_time) = CURRENT_DATE";
 
     @Override
     public List<UserActivity> findAll() throws DaoException {
         List<UserActivity> acitivities = new ArrayList<>();
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                UserActivity userActivity = new UserActivity(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("description"),
+                        resultSet.getTimestamp("date_time")
+                );
+                acitivities.add(userActivity);
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return acitivities;
+    }
+
+    @Override
+    public List<UserActivity> findAllToday() throws DaoException {
+        List<UserActivity> acitivities = new ArrayList<>();
+        try (Connection connection = ConnectionManager.open();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_TODAY_ACTIVITIES)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 UserActivity userActivity = new UserActivity(
