@@ -48,7 +48,8 @@ public class UserServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unable to parse user_id to number");
                 return;
             } catch (ServiceException e) {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                e.printStackTrace();
+                //resp.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
             out.print(gson.toJson(user));

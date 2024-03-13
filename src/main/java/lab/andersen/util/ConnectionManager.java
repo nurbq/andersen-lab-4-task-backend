@@ -24,7 +24,6 @@ public class ConnectionManager {
 
         static {
             String jdbc_driver = "org.postgresql.Driver";
-            System.out.println(jdbc_driver);
             try {
                 Class.forName(jdbc_driver);
             } catch (ClassNotFoundException e) {
