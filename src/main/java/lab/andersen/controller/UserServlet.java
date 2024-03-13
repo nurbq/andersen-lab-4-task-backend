@@ -34,7 +34,8 @@ public class UserServlet extends HttpServlet {
             try {
                 users = userService.findAllUsers();
             } catch (ServiceException e) {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                e.printStackTrace();
+                //resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
             out.print(gson.toJson(users));

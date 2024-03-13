@@ -21,5 +21,15 @@ public class ConnectionManager {
         private static final String JDBC_URL = System.getenv("JDBC_DATABASE_URL");
         private static final String JDBC_USER = System.getenv("JDBC_DATABASE_USERNAME");
         private static final String JDBC_PASSWORD = System.getenv("JDBC_DATABASE_PASSWORD");
+
+        static {
+            String jdbc_driver = System.getenv("JDBC_DRIVER");
+            System.out.println(jdbc_driver);
+            try {
+                Class.forName(jdbc_driver);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
