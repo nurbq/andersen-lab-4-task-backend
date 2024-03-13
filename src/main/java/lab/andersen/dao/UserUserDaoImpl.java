@@ -73,6 +73,7 @@ public class UserUserDaoImpl implements UserDao {
             statement.setInt(1, entity.getAge());
             statement.setString(2, entity.getSurname());
             statement.setString(3, entity.getName());
+            statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new DaoException(e);
