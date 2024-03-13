@@ -1,15 +1,15 @@
 package lab.andersen.utils;
 
-import java.io.IOException;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+
 import java.io.InputStream;
 import java.util.Properties;
 
+@UtilityClass
 public final class PropertiesUtils {
 
     public static final Properties PROPERTIES = new Properties();
-
-    private PropertiesUtils() {
-    }
 
     static {
         loadProperties();
@@ -17,14 +17,13 @@ public final class PropertiesUtils {
 
     public static String get(String key) {
         return PROPERTIES.getProperty(key);
+
     }
 
+    @SneakyThrows
     private static void loadProperties() {
-        try (InputStream inputStream = PropertiesUtils.class.getClassLoader().getResourceAsStream("application.properties")) {
-            PROPERTIES.load(inputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        InputStream inputStream = PropertiesUtils.class.getClassLoader().getResourceAsStream("application.properties");
+        PROPERTIES.load(inputStream);
     }
 
 }
