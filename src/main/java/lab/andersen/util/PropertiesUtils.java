@@ -9,7 +9,6 @@ import java.util.Properties;
 @UtilityClass
 public final class PropertiesUtils {
 
-
     public static final Properties PROPERTIES = new Properties();
 
     static {
@@ -22,7 +21,7 @@ public final class PropertiesUtils {
 
     @SneakyThrows
     private static void loadProperties() {
-        InputStream inputStream = Properties.class.getClassLoader().getResourceAsStream("application.properties");
+        InputStream inputStream = PropertiesUtils.class.getClassLoader().getResourceAsStream("application.properties");
         PROPERTIES.load(inputStream);
     }
 }
