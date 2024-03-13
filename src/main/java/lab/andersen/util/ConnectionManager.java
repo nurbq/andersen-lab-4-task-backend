@@ -1,25 +1,42 @@
 package lab.andersen.util;
 
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
+
+@UtilityClass
 public class ConnectionManager {
 
-    private ConnectionManager() {
+    private static final String URL_KEY = "db.url";
+    private static final String USERNAME_KEY = "db.username";
+    private static final String PASSWORD_KEY = "db.password";
+    private static final String DB_DRIVER_KEY = "db.driver";
+
+    static {
+        loadDriver();
     }
 
-    public static Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(Connector.JDBC_URL, Connector.JDBC_USER, Connector.JDBC_PASSWORD);
+    private static void loadDriver() {
+        try {
+            Class.forName(PropertiesUtils.get(DB_DRIVER_KEY));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SneakyThrows
+    public static Connection open() {
+        Connection connection = DriverManager.getConnection(
+                PropertiesUtils.get(URL_KEY),
+                PropertiesUtils.get(USERNAME_KEY),
+                PropertiesUtils.get(PASSWORD_KEY)
+        );
         connection.setAutoCommit(false);
         connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         return connection;
     }
 
-    private class Connector {
-
-        private static final String JDBC_URL = System.getenv("JDBC_DATABASE_URL");
-        private static final String JDBC_USER = System.getenv("JDBC_DATABASE_USERNAME");
-        private static final String JDBC_PASSWORD = System.getenv("JDBC_DATABASE_PASSWORD");
-    }
 }
