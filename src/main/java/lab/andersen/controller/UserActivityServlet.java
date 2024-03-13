@@ -1,12 +1,12 @@
 package lab.andersen.controller;
 
 import com.google.gson.Gson;
-import lab.andersen.dao.UserDaoImpl;
+import lab.andersen.dao.UserActivityDaoImpl;
 import lab.andersen.exception.ServiceException;
-import lab.andersen.model.User;
-import lab.andersen.service.UserService;
-import lab.andersen.service.UserServiceImpl;
+import lab.andersen.model.UserActivity;
+import lab.andersen.service.UserActivityServiceImpl;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,40 +17,40 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/users/*")
-public class UserServlet extends HttpServlet {
+@WebServlet("/users-activities/*")
+public class UserActivityServlet extends HttpServlet {
 
-    private final UserService userService = new UserServiceImpl(new UserDaoImpl());
+    private final UserActivityServiceImpl userActivityService = new UserActivityServiceImpl(new UserActivityDaoImpl());
     private final Gson gson = new Gson();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         String pathInfo = req.getPathInfo();
-        if (pathInfo == null || pathInfo.equals("/")) {
-            List<User> users = null;
+        if(pathInfo == null || pathInfo.equals("/")) {
+            List<UserActivity> activities = null;
             try {
-                users = userService.findAllUsers();
+                activities = userActivityService.findAllUsersActivities();
             } catch (ServiceException e) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
-            out.print(gson.toJson(users));
+            out.print(gson.toJson(activities));
         } else {
-            User user = null;
+            UserActivity userActivity = null;
             try {
                 int id = Integer.parseInt(pathInfo.replace("/", ""));
-                user = userService.findById(id);
+                userActivity = userActivityService.findById(id);
             } catch (NumberFormatException e) {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unable to parse user_id to number");
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unable to parse user activity id to number");
                 return;
             } catch (ServiceException e) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
-            out.print(gson.toJson(user));
+            out.print(gson.toJson(userActivity));
         }
         out.flush();
     }
@@ -58,10 +58,10 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BufferedReader in = req.getReader();
-        String jsonUser = in.lines().collect(Collectors.joining());
-        User user = gson.fromJson(jsonUser, User.class);
+        String jsonUserActivity = in.lines().collect(Collectors.joining());
+        UserActivity userActivity = gson.fromJson(jsonUserActivity, UserActivity.class);
         try {
-            userService.create(user);
+            userActivityService.create(userActivity);
         } catch (ServiceException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -71,10 +71,10 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BufferedReader in = req.getReader();
-        String jsonUser = in.lines().collect(Collectors.joining());
-        User user = gson.fromJson(jsonUser, User.class);
+        String jsonUserActivity = in.lines().collect(Collectors.joining());
+        UserActivity userActivity = gson.fromJson(jsonUserActivity, UserActivity.class);
         try {
-            userService.update(user);
+            userActivityService.update(userActivity);
         } catch (ServiceException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -85,7 +85,7 @@ public class UserServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
         try {
             int id = Integer.parseInt(pathInfo.replace("/", ""));
-            userService.delete(id);
+            userActivityService.delete(id);
         } catch (ServiceException | NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }

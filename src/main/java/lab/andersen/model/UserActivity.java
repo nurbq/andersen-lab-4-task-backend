@@ -5,15 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements Serializable {
+public class UserActivity implements Serializable {
 
     private int id;
-    private int age;
-    private String surname;
-    private String name;
-
+    private int userId;
+    private String description;
+    private Timestamp dateTime;
 }

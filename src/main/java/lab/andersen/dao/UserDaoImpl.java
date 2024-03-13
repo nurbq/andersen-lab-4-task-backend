@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserUserDaoImpl implements UserDao {
+public class UserDaoImpl implements UserDao {
 
     private static final String FIND_ALL_USERS = "SELECT id, age, surname, name FROM users";
     private static final String FIND_USER_BY_ID = "SELECT id, age, surname, name FROM users WHERE id = ?";
