@@ -34,8 +34,7 @@ public class UserServlet extends HttpServlet {
             try {
                 users = userService.findAllUsers();
             } catch (ServiceException e) {
-                e.printStackTrace();
-                //resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
             out.print(gson.toJson(users));
@@ -48,8 +47,7 @@ public class UserServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unable to parse user_id to number");
                 return;
             } catch (ServiceException e) {
-                e.printStackTrace();
-                //resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
             out.print(gson.toJson(user));

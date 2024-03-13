@@ -18,6 +18,7 @@ public class User implements Serializable {
         this.id = id;
         this.age = age;
         this.surname = surname;
+        this.name = name;
     }
 
     public int getId() {
