@@ -1,6 +1,7 @@
 package lab.andersen.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import lab.andersen.dao.UserDaoImpl;
 import lab.andersen.exception.ServiceException;
 import lab.andersen.model.User;
@@ -57,12 +58,12 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        BufferedReader in = req.getReader();
-        String jsonUser = in.lines().collect(Collectors.joining());
-        User user = gson.fromJson(jsonUser, User.class);
         try {
+            BufferedReader in = req.getReader();
+            String jsonUser = in.lines().collect(Collectors.joining());
+            User user = gson.fromJson(jsonUser, User.class);
             userService.create(user);
-        } catch (ServiceException e) {
+        } catch (ServiceException | JsonSyntaxException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
         resp.setStatus(HttpServletResponse.SC_CREATED);
