@@ -49,7 +49,7 @@ public class UserServiceUnitTest {
 
     @Test
     public void findUserById_returnsUser() throws DaoException, ServiceException {
-        User expectedUser = new User(1, 15, "Bide", "Joe");
+        User expectedUser = new User(1, 15, "Biden", "Joe");
 
         when(userDao.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
 
