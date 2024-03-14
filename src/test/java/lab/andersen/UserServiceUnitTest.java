@@ -4,13 +4,13 @@ package lab.andersen;
 import lab.andersen.dao.UserDao;
 import lab.andersen.exception.DaoException;
 import lab.andersen.exception.ServiceException;
+import lab.andersen.exception.UserNotFoundException;
 import lab.andersen.model.User;
 import lab.andersen.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public class UserServiceUnitTest {
     }
 
     @Test
-    public void findUserById() throws DaoException, ServiceException {
-        User expectedUser = new User(1, 15, "Bide", "Joe");
+    public void findUserById_returnsUser() throws DaoException, ServiceException {
+        User expectedUser = new User(1, 15, "Biden", "Joe");
 
         when(userDao.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
 
@@ -58,6 +58,15 @@ public class UserServiceUnitTest {
         verify(userDao, times(1)).findById(expectedUser.getId());
 
         Assertions.assertEquals(expectedUser.getName(), actualUser.getName());
+    }
+
+    @Test
+    public void findUserById_throwsException() throws DaoException {
+        when(userDao.findById(anyInt())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserNotFoundException.class,
+                () -> userService.findById(anyInt())
+        );
     }
 
 }
