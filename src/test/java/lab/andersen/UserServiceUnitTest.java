@@ -15,6 +15,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
 
 public class UserServiceUnitTest {
 
@@ -35,13 +38,26 @@ public class UserServiceUnitTest {
         expectedUsers.add(new User(1, 20, "TestName1", "testname2"));
         expectedUsers.add(new User(2, 21, "TestName2", "testname3"));
 
-        Mockito.when(userDao.findAll()).thenReturn(expectedUsers);
+        when(userDao.findAll()).thenReturn(expectedUsers);
 
         List<User> actualUsers = userService.findAllUsers();
 
-        Mockito.verify(userDao, Mockito.times(1)).findAll();
+        verify(userDao, times(1)).findAll();
 
         Assertions.assertEquals(expectedUsers.size(), actualUsers.size());
-
     }
+
+    @Test
+    public void findUserById() throws DaoException, ServiceException {
+        User expectedUser = new User(1, 15, "Bide", "Joe");
+
+        when(userDao.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
+
+        User actualUser = userService.findById(expectedUser.getId());
+
+        verify(userDao, times(1)).findById(expectedUser.getId());
+
+        Assertions.assertEquals(expectedUser.getName(), actualUser.getName());
+    }
+
 }
