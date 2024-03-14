@@ -1,8 +1,8 @@
 package lab.andersen.service;
 
 import lab.andersen.exception.ServiceException;
-import lab.andersen.model.User;
 import lab.andersen.model.UserActivity;
+import lab.andersen.model.UserActivityShort;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface UserActivityService {
 
     List<UserActivity> findAllUsersActivities() throws ServiceException;
 
-    List<UserActivity> findAllTodayActivities() throws ServiceException;
+    List<UserActivityShort> findAllTodayActivities() throws ServiceException;
 
     UserActivity findById(int id) throws ServiceException;
 

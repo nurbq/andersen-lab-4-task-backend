@@ -5,6 +5,7 @@ import lab.andersen.exception.DaoException;
 import lab.andersen.exception.ServiceException;
 import lab.andersen.exception.UserActivityNotFoundException;
 import lab.andersen.model.UserActivity;
+import lab.andersen.model.UserActivityShort;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class UserActivityServiceImpl implements UserActivityService {
     }
 
     @Override
-    public List<UserActivity> findAllTodayActivities() throws ServiceException {
+    public List<UserActivityShort> findAllTodayActivities() throws ServiceException {
         try {
             return userActivityDao.findAllToday();
         } catch (DaoException e) {
