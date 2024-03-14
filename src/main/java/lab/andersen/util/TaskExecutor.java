@@ -12,14 +12,11 @@ public class TaskExecutor {
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private final Task task;
 
-    public TaskExecutor(Task task)
-    {
+    public TaskExecutor(Task task) {
         this.task = task;
-
     }
 
-    public void startExecutionAt(int targetHour, int targetMin, int targetSec)
-    {
+    public void startExecutionAt(int targetHour, int targetMin, int targetSec) {
         Runnable taskWrapper = () -> {
             task.execute();
             startExecutionAt(targetHour, targetMin, targetSec);
@@ -28,21 +25,20 @@ public class TaskExecutor {
         executorService.schedule(taskWrapper, delay, TimeUnit.SECONDS);
     }
 
-    private long computeNextDelay(int targetHour, int targetMin, int targetSec)
-    {
+
+    private long computeNextDelay(int targetHour, int targetMin, int targetSec) {
         LocalDateTime localNow = LocalDateTime.now();
         ZoneId currentZone = ZoneId.systemDefault();
         ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
         ZonedDateTime zonedNextTarget = zonedNow.withHour(targetHour).withMinute(targetMin).withSecond(targetSec);
-        if(zonedNow.compareTo(zonedNextTarget) > 0)
+        if (zonedNow.compareTo(zonedNextTarget) > 0)
             zonedNextTarget = zonedNextTarget.plusDays(1);
 
         Duration duration = Duration.between(zonedNow, zonedNextTarget);
         return duration.getSeconds();
     }
 
-    public void stop()
-    {
+    public void stop() {
         executorService.shutdown();
         try {
             executorService.awaitTermination(1, TimeUnit.DAYS);
