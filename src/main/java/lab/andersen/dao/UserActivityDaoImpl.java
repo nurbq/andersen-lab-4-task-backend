@@ -129,7 +129,7 @@ public class UserActivityDaoImpl implements UserActivityDao {
                 resultSet.getInt("id"),
                 resultSet.getInt("user_id"),
                 resultSet.getString("description"),
-                resultSet.getTimestamp("date_time").toLocalDateTime()
+                resultSet.getTimestamp("date_time")
         );
     }
 
