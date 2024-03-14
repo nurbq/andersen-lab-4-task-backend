@@ -1,0 +1,4 @@
+<web-app>
+    <Context path="/api"/>
+    <display-name>Email Sender</display-name>
+</web-app>
