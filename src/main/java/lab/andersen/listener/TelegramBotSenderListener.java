@@ -21,10 +21,10 @@ public class TelegramBotSenderListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         taskExecutor = new TaskExecutor(() -> {
-            TelegramSender.sendMessage("test daily job");
+            TelegramSender.sendMessage("TEST DAILY JOB FROM VM TOMCAT");
             TelegramSender.sendPDF(new File(FULL_PATH_PDF));
         });
-        taskExecutor.startExecutionAt(23, 55, 0);
+        taskExecutor.startExecutionAt(14, 20, 0);
 
         logger.info("TelegramBotSender executed");
     }
