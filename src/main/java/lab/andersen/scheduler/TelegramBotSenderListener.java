@@ -1,4 +1,4 @@
-package lab.andersen.listener;
+package lab.andersen.scheduler;
 
 import lab.andersen.util.PropertiesUtils;
 import lab.andersen.util.TaskExecutor;
@@ -16,7 +16,6 @@ public class TelegramBotSenderListener implements ServletContextListener {
     private TaskExecutor taskExecutor;
     private static final Logger logger = Logger.getLogger(TelegramBotSenderListener.class.getName());
     private static final String FULL_PATH_PDF = PropertiesUtils.get("pdf.base.url") + LocalDate.now() + ".pdf";
-
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
