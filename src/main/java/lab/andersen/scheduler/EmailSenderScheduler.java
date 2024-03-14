@@ -23,7 +23,7 @@ public class EmailSenderScheduler implements ServletContextListener {
     private static final String subjectMessage = "Activity of users";
     private static final String FULL_PATH_PDF = PropertiesUtils.get("pdf.base.url") + LocalDate.now() + ".pdf";
     private static final int TARGET_HOUR = 16;
-    private static final int TARGET_MIN = 24;
+    private static final int TARGET_MIN = 27;
     private static final int TARGET_SEC = 0;
 
 
