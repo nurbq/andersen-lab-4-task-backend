@@ -23,7 +23,7 @@ public class TelegramBotSenderListener implements ServletContextListener {
             TelegramSender.sendMessage("daily job");
             TelegramSender.sendPDF(new File(FULL_PATH_PDF));
         });
-        taskExecutor.startExecutionAt(3, 19, 0);
+        taskExecutor.startExecutionAt(3, 23, 0);
 
         logger.info("TelegramBotSender executed");
     }
