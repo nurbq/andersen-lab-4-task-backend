@@ -1,4 +1,4 @@
-package lab.andersen.listener;
+package lab.andersen.scheduler;
 
 import lab.andersen.service.EmailSenderService;
 import lab.andersen.util.PdfGenerator;
@@ -22,8 +22,8 @@ public class EmailSenderScheduler implements ServletContextListener {
     private static final String bodyMessage = "Attaching files";
     private static final String subjectMessage = "Activity of users";
     private static final String FULL_PATH_PDF = PropertiesUtils.get("pdf.base.url") + LocalDate.now() + ".pdf";
-    private static final int TARGET_HOUR = 18;
-    private static final int TARGET_MIN = 19;
+    private static final int TARGET_HOUR = 3;
+    private static final int TARGET_MIN = 18;
     private static final int TARGET_SEC = 0;
 
 

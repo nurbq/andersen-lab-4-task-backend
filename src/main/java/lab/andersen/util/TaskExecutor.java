@@ -39,11 +39,6 @@ public class TaskExecutor {
     }
 
     public void stop() {
-        executorService.shutdown();
-        try {
-            executorService.awaitTermination(1, TimeUnit.DAYS);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        executorService.shutdownNow();
     }
 }
