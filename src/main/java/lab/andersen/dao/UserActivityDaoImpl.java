@@ -24,6 +24,10 @@ public class UserActivityDaoImpl implements UserActivityDao {
     private static final String UPDATE_USER_ACTIVITY =
             "UPDATE users_activities SET user_id = ?, description = ?, date_time = ? WHERE id = ?;";
     private static final String DELETE_USER_ACTIVITY = "DELETE FROM users_activities WHERE id = ?";
+    private static final String FIND_ALL_TODAY_ACTIVITIES = "SELECT u.name, ua.description, ua.date_time " +
+            "FROM users_activities ua " +
+            "         left join users u on ua.user_id = u.id " +
+            "WHERE DATE(date_time) = CURRENT_DATE";
 
     @Override
     public List<UserActivity> findAll() throws DaoException {
@@ -49,7 +53,23 @@ public class UserActivityDaoImpl implements UserActivityDao {
 
     @Override
     public List<UserActivityShort> findAllToday() throws DaoException {
-        return null;//todo
+        List<UserActivityShort> activities = new ArrayList<>();
+        try (Connection connection = ConnectionManager.open();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_TODAY_ACTIVITIES)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                UserActivityShort userActivity = new UserActivityShort(
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getTimestamp("date_time").toLocalDateTime()
+                );
+                activities.add(userActivity);
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return activities;
     }
 
     @Override
