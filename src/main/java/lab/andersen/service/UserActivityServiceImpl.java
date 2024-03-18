@@ -74,4 +74,13 @@ public class UserActivityServiceImpl implements UserActivityService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public List<UserActivity> findAllUsersActivitiesAddUserName() throws ServiceException {
+        try {
+            return userActivityDao.findAllAddUsername();
+        } catch (DaoException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

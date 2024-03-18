@@ -19,4 +19,6 @@ public interface UserActivityService {
     void update(UserActivity userActivity) throws ServiceException;
 
     void delete(int id) throws ServiceException;
+
+    List<UserActivity> findAllUsersActivitiesAddUserName() throws ServiceException;
 }
