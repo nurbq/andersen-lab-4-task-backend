@@ -1,4 +1,0 @@
-<web-app>
-    <Context path=""/>
-    <display-name>Email Sender</display-name>
-</web-app>
