@@ -69,4 +69,12 @@ public class UserServiceUnitTest {
         );
     }
 
+    @Test
+    public void create_userSuccessfullyCreates() throws DaoException {
+        User user = new User();
+        doThrow(DaoException.class).when(userDao).update(any(User.class));
+
+        Assertions.assertThrows(ServiceException.class, () -> userService.create(user));
+    }
+
 }
