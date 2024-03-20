@@ -69,9 +69,15 @@ public class UserActivityServlet extends HttpServlet {
         BufferedReader in = req.getReader();
         String jsonUserActivity = in.lines().collect(Collectors.joining());
 
+        UserActivity createdUserActivity = null;
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
         try {
             UserActivity userActivity = gson.fromJson(jsonUserActivity, UserActivity.class);
-            userActivityService.create(userActivity);
+            createdUserActivity = userActivityService.create(userActivity);
+            out.print(gson.toJson(createdUserActivity));
         } catch (ServiceException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             System.out.println(e);
@@ -80,15 +86,24 @@ public class UserActivityServlet extends HttpServlet {
             System.out.println(e);
         }
         resp.setStatus(HttpServletResponse.SC_CREATED);
+        out.flush();
+        out.close();
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BufferedReader in = req.getReader();
         String jsonUserActivity = in.lines().collect(Collectors.joining());
+
+        UserActivity updatedUserActivity = null;
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
         try {
             UserActivity userActivity = gson.fromJson(jsonUserActivity, UserActivity.class);
-            userActivityService.update(userActivity);
+            updatedUserActivity = userActivityService.update(userActivity);
+            out.print(gson.toJson(updatedUserActivity));
         } catch (ServiceException e) {
             System.out.println(e);
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -96,6 +111,9 @@ public class UserActivityServlet extends HttpServlet {
         catch (Exception e){
             System.err.println(e);
         }
+        resp.setStatus(HttpServletResponse.SC_OK);
+        out.flush();
+        out.close();
     }
 
     @Override

@@ -68,29 +68,53 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void create(User entity) throws DaoException {
+    public User create(User entity) throws DaoException {
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement statement = connection.prepareStatement(CREATE_USER)) {
+             PreparedStatement statement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, entity.getAge());
             statement.setString(2, entity.getSurname());
             statement.setString(3, entity.getName());
             statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    entity.setId(generatedKeys.getInt("id"));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+
             connection.commit();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+
+        return entity;
     }
 
     @Override
-    public void update(User entity) throws DaoException {
+    public User update(User entity) throws DaoException {
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_USER)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER, Statement.RETURN_GENERATED_KEYS)) {
             if (findById(entity.getId()).isPresent()) {
                 statement.setInt(1, entity.getAge());
                 statement.setString(2, entity.getSurname());
                 statement.setString(3, entity.getName());
                 statement.setInt(4, entity.getId());
                 statement.executeUpdate();
+
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        entity.setName(generatedKeys.getString("name"));
+                        entity.setSurname(generatedKeys.getString("surname"));
+                        entity.setAge(generatedKeys.getInt("age"));
+                    }
+                    else {
+                        throw new SQLException("Updating user failed.");
+                    }
+                }
+
                 connection.commit();
             } else {
                 throw new UserNotFoundException(String.format("User with id=%d doesn't exist", entity.getId()));
@@ -98,6 +122,8 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+
+        return entity;
     }
 
     @Override
