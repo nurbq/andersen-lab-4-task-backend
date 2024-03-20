@@ -58,27 +58,44 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        User createdUser = null;
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
         try {
             BufferedReader in = req.getReader();
             String jsonUser = in.lines().collect(Collectors.joining());
             User user = gson.fromJson(jsonUser, User.class);
-            userService.create(user);
+            createdUser = userService.create(user);
+            out.print(gson.toJson(createdUser));
         } catch (ServiceException | JsonSyntaxException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
         resp.setStatus(HttpServletResponse.SC_CREATED);
+        out.flush();
+        out.close();
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        User updatedUser = null;
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
         BufferedReader in = req.getReader();
         String jsonUser = in.lines().collect(Collectors.joining());
         User user = gson.fromJson(jsonUser, User.class);
         try {
-            userService.update(user);
+            updatedUser = userService.update(user);
+            out.print(gson.toJson(updatedUser));
         } catch (ServiceException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
+        resp.setStatus(HttpServletResponse.SC_OK);
+        out.flush();
+        out.close();
     }
 
     @Override

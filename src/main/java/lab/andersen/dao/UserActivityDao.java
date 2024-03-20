@@ -15,9 +15,9 @@ public interface UserActivityDao {
 
     Optional<UserActivity> findById(int id) throws DaoException;
 
-    void create(UserActivity entity) throws DaoException;
+    UserActivity create(UserActivity entity) throws DaoException;
 
-    void update(UserActivity entity) throws DaoException;
+    UserActivity update(UserActivity entity) throws DaoException;
 
     void delete(int id) throws DaoException;
     List<UserActivity> findAllAddUsername() throws DaoException;

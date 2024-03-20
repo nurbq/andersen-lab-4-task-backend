@@ -42,21 +42,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void create(User user) throws ServiceException {
+    public User create(User user) throws ServiceException {
+        User createdUser = null;
         try {
-            userDao.create(user);
+            createdUser = userDao.create(user);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
+        return createdUser;
     }
 
     @Override
-    public void update(User user) throws ServiceException {
+    public User update(User user) throws ServiceException {
+        User updatedUser = null;
         try {
-            userDao.update(user);
+            updatedUser = userDao.update(user);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
+        return updatedUser;
     }
 
     @Override

@@ -14,9 +14,9 @@ public interface UserActivityService {
 
     UserActivity findById(int id) throws ServiceException;
 
-    void create(UserActivity userActivity) throws ServiceException;
+    UserActivity create(UserActivity userActivity) throws ServiceException;
 
-    void update(UserActivity userActivity) throws ServiceException;
+    UserActivity update(UserActivity userActivity) throws ServiceException;
 
     void delete(int id) throws ServiceException;
 

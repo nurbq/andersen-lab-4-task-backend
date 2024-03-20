@@ -49,21 +49,27 @@ public class UserActivityServiceImpl implements UserActivityService {
     }
 
     @Override
-    public void create(UserActivity userActivity) throws ServiceException {
+    public UserActivity create(UserActivity userActivity) throws ServiceException {
+        UserActivity createdUserActivity = null;
         try {
-            userActivityDao.create(userActivity);
+            createdUserActivity = userActivityDao.create(userActivity);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
+        return createdUserActivity;
     }
 
     @Override
-    public void update(UserActivity userActivity) throws ServiceException {
+    public UserActivity update(UserActivity userActivity) throws ServiceException {
+        UserActivity updatedUserActivity = null;
         try {
-            userActivityDao.update(userActivity);
+            updatedUserActivity = userActivityDao.update(userActivity);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
+        return updatedUserActivity;
     }
 
     @Override

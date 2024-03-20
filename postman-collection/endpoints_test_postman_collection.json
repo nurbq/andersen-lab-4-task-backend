@@ -1,0 +1,865 @@
+{
+	"info": {
+		"_postman_id": "a282c67e-8525-41c7-81f0-d725dd3102bf",
+		"name": "Users API Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27709058",
+		"_collection_link": "https://www.postman.com/arachnoplov/workspace/yellow-team/collection/27709058-a282c67e-8525-41c7-81f0-d725dd3102bf?action=share&source=collection_link&creator=27709058"
+	},
+	"item": [
+		{
+			"name": "User List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields - id, age, surname, and name\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(user) {\r",
+							"        pm.expect(user).to.have.property('id');\r",
+							"        pm.expect(user).to.have.property('age');\r",
+							"        pm.expect(user).to.have.property('surname');\r",
+							"        pm.expect(user).to.have.property('name');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id is a non-negative integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  responseData.forEach(function(user) {\r",
+							"    pm.expect(user.id).to.be.a('number').and.to.be.at.least(0, \"Id should be a non-negative integer\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Age should be a non-negative integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(user) {\r",
+							"    pm.expect(user.age).to.be.a('number').and.to.satisfy((age) => age >= 0, \"Age should be a non-negative integer\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Surname and name should be non-empty strings\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  \r",
+							"  responseData.forEach(function(user) {\r",
+							"    pm.expect(user.surname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Surname should not be empty\");\r",
+							"    pm.expect(user.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Schema is valid\", function () {\r",
+							"  var schema = {\r",
+							"    type: \"array\",\r",
+							"    items: {\r",
+							"      type: \"object\",\r",
+							"      properties: {\r",
+							"        id: { type: \"number\" },\r",
+							"        age: { type: \"number\" },\r",
+							"        surname: { type: \"string\" },\r",
+							"        name: { type: \"string\" }\r",
+							"      },\r",
+							"      required: [\"id\", \"age\", \"surname\", \"name\"]\r",
+							"    }\r",
+							"  };\r",
+							"\r",
+							"  var response = pm.response.json();\r",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 201\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response body has the required fields - id, age, surname, and name\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('age');\r",
+							"    pm.expect(responseData).to.have.property('surname');\r",
+							"    pm.expect(responseData).to.have.property('name');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.id).to.be.a('number');\r",
+							"    pm.expect(responseData.id).to.be.at.least(0);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Age is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.age).to.be.a('number');\r",
+							"    pm.expect(responseData.age).to.be.at.least(0);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Name and surname are non-empty strings\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"    pm.expect(responseData.surname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Surname should not be empty\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Schema is valid\", function () {\r",
+							"  var schema = {\r",
+							"    type: \"object\",\r",
+							"    properties: {\r",
+							"      id: { type: \"number\" },\r",
+							"      age: { type: \"number\" },\r",
+							"      name: { type: \"string\", minLength: 1 },\r",
+							"      surname: { type: \"string\", minLength: 1 }\r",
+							"    },\r",
+							"    required: [\"id\", \"age\", \"name\", \"surname\"],\r",
+							"  };\r",
+							"\r",
+							"  var response = pm.response.json();\r",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// Stores the userId in a collection variable\r",
+							"var userId = pm.response.json().id;\r",
+							"pm.collectionVariables.set(\"userId\", userId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Test\",\r\n    \"surname\": \"Test\",\r\n    \"age\": \"13\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/users",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response has the required fields - id, age, surname, and name\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.id).to.exist;\r",
+							"    pm.expect(responseData.age).to.exist;\r",
+							"    pm.expect(responseData.surname).to.exist;\r",
+							"    pm.expect(responseData.name).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id is a non-negative integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.id).to.be.a('number').and.to.satisfy((id) => id >= 0, \"Id should be a non-negative integer\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Age is a non-negative integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.age).to.exist.and.to.be.a('number');\r",
+							"  pm.expect(responseData.age).to.satisfy((age) => age >= 0, \"Age must be a non-negative integer\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Surname is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.surname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Surname should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Name is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Schema is valid\", function () {\r",
+							"  var schema = {\r",
+							"    type: \"object\",\r",
+							"    properties: {\r",
+							"      id: {\r",
+							"        type: \"number\"\r",
+							"      },\r",
+							"      age: {\r",
+							"        type: \"number\"\r",
+							"      },\r",
+							"      surname: {\r",
+							"        type: \"string\"\r",
+							"      },\r",
+							"      name: {\r",
+							"        type: \"string\"\r",
+							"      }\r",
+							"    },\r",
+							"    required: [\"id\", \"age\", \"surname\", \"name\"],\r",
+							"  };\r",
+							"\r",
+							"  var response = pm.response.json();\r",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users/{{userId}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Edit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - id, age, surname, and name\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('age');",
+							"    pm.expect(responseData).to.have.property('surname');",
+							"    pm.expect(responseData).to.have.property('name');",
+							"});",
+							"",
+							"",
+							"pm.test(\"ID is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.id).to.be.a('number').and.to.satisfy((id) => id >= 0, \"ID should be a non-negative integer\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Age is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.age).to.be.a('number');",
+							"    pm.expect(responseData.age).to.be.at.least(0, \"Age must be a non-negative integer\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Surname and name must be non-empty strings\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.surname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Surname should not be empty\");",
+							"  pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+							"});",
+							"",
+							"// Test for response schema",
+							"pm.test(\"Schema is valid\", function () {",
+							"  var schema = {",
+							"    type: \"object\",",
+							"    properties: {",
+							"      id: {",
+							"        type: \"number\"",
+							"      },",
+							"      age: {",
+							"        type: \"number\"",
+							"      },",
+							"      surname: {",
+							"        type: \"string\"",
+							"      },",
+							"      name: {",
+							"        type: \"string\"",
+							"      }",
+							"    },",
+							"    required: [\"id\", \"age\", \"surname\", \"name\"],",
+							"  };",
+							"",
+							"  var response = pm.response.json();",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{userId}},\r\n    \"age\": 14,\r\n    \"surname\": \"Test Edited\",\r\n    \"name\": \"Test Edited\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/users",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has the required fields - id, userId, description, and dateTime\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(item => {\r",
+							"        pm.expect(item).to.have.property('id');\r",
+							"        pm.expect(item).to.have.property('userId');\r",
+							"        pm.expect(item).to.have.property('description');\r",
+							"        pm.expect(item).to.have.property('dateTime');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Description is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  responseData.forEach(function(item) {\r",
+							"    pm.expect(item.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Schema is valid\", function () {\r",
+							"  var schema = {\r",
+							"    type: \"array\",\r",
+							"    items: {\r",
+							"      type: \"object\",\r",
+							"      properties: {\r",
+							"        id: { type: \"number\" },\r",
+							"        userId: { type: \"number\" },\r",
+							"        description: { type: \"string\" },\r",
+							"        dateTime: { type: \"string\", format: \"date-time\" }\r",
+							"      },\r",
+							"      required: [\"id\", \"userId\", \"description\", \"dateTime\"]\r",
+							"    }\r",
+							"  };\r",
+							"\r",
+							"  var response = pm.response.json();\r",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users-activities",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users-activities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 201\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields - id, userId, description, and dateTime\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData).to.have.property('id');\r",
+							"  pm.expect(responseData).to.have.property('userId');\r",
+							"  pm.expect(responseData).to.have.property('description');\r",
+							"  pm.expect(responseData).to.have.property('dateTime');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"UserId is a positive integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.userId).to.be.a('number').and.to.be.above(0, \"UserId should be a positive integer\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Description is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Test for response schema\r",
+							"pm.test(\"Response has the required fields - id, userId, description, and dateTime\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData).to.have.property('id');\r",
+							"  pm.expect(responseData).to.have.property('userId');\r",
+							"  pm.expect(responseData).to.have.property('description');\r",
+							"  pm.expect(responseData).to.have.property('dateTime');\r",
+							"\r",
+							"  pm.expect(responseData.id).to.be.a('number');\r",
+							"  pm.expect(responseData.userId).to.be.a('number').and.to.be.above(0, \"UserId should be a positive integer\");\r",
+							"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+							"  pm.expect(responseData.dateTime).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"// Stores the id in a collection variable\r",
+							"var responseData = pm.response.json();\r",
+							"var activityId = responseData.id;\r",
+							"pm.collectionVariables.set(\"activityId\", activityId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": {{userId}},\r\n    \"description\": \"Test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/users-activities",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users-activities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Content-Type is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('userId');\r",
+							"    pm.expect(responseData).to.have.property('description');\r",
+							"    pm.expect(responseData).to.have.property('dateTime');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Description is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Schema is valid\", function () {\r",
+							"  var schema = {\r",
+							"    type: \"object\",\r",
+							"    properties: {\r",
+							"      id: {\r",
+							"        type: \"number\"\r",
+							"      },\r",
+							"      userId: {\r",
+							"        type: \"number\"\r",
+							"      },\r",
+							"      description: {\r",
+							"        type: \"string\"\r",
+							"      },\r",
+							"      dateTime: {\r",
+							"        type: \"string\",\r",
+							"        format: \"date-time\"\r",
+							"      }\r",
+							"    },\r",
+							"    required: [\"id\", \"userId\", \"description\", \"dateTime\"],\r",
+							"  };\r",
+							"\r",
+							"  var response = pm.response.json();\r",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users-activities/{{activityId}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users-activities",
+						"{{activityId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity Edit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields - id, userId, description, and dateTime\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('userId');\r",
+							"    pm.expect(responseData).to.have.property('description');\r",
+							"    pm.expect(responseData).to.have.property('dateTime');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"UserId is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.userId).to.be.a('number');\r",
+							"    pm.expect(responseData.userId).to.be.at.least(0);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Description is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+							"});\r",
+							"\r",
+							"// Test for response schema\r",
+							"pm.test(\"Schema is valid\", function () {\r",
+							"  var schema = {\r",
+							"    type: \"object\",\r",
+							"    properties: {\r",
+							"      id: { type: \"number\" },\r",
+							"      userId: { type: \"number\" },\r",
+							"      description: { type: \"string\" },\r",
+							"      dateTime: { type: \"string\" }\r",
+							"    },\r",
+							"    required: [\"id\", \"userId\", \"description\", \"dateTime\"]\r",
+							"  };\r",
+							"\r",
+							"  var response = pm.response.json();\r",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{activityId}},\r\n    \"userId\": {{userId}},\r\n    \"description\": \"Test Edited\",\r\n    \"dateTime\": \"2024-03-14T12:04\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/users-activities",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users-activities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response body is null\", function () {\r",
+							"    const responseData = xml2Json(pm.response.text());\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.null;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response body is empty\", function () {\r",
+							"    pm.expect(pm.response.text()).to.be.empty;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users-activities?id={{activityId}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users-activities"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{activityId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response body is null\", function () {\r",
+							"    const responseData = xml2Json(pm.response.text());\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.null;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify that the response body is empty\", function () {\r",
+							"    pm.expect(pm.response.text()).to.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/users/{{userId}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "http://34.83.136.212:8085"
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "activityId",
+			"value": ""
+		}
+	]
+}

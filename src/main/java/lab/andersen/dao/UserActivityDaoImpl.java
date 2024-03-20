@@ -6,10 +6,7 @@ import lab.andersen.model.UserActivity;
 import lab.andersen.model.UserActivityShort;
 import lab.andersen.util.ConnectionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -118,28 +115,53 @@ public class UserActivityDaoImpl implements UserActivityDao {
     }
 
     @Override
-    public void create(UserActivity entity) throws DaoException {
+    public UserActivity create(UserActivity entity) throws DaoException {
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement statement = connection.prepareStatement(CREATE_USER_ACTIVITY)) {
+             PreparedStatement statement = connection.prepareStatement(CREATE_USER_ACTIVITY, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, entity.getUserId());
             statement.setString(2, entity.getDescription());
             statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    entity.setId(generatedKeys.getInt("id"));
+                    entity.setDateTime(generatedKeys.getTimestamp("date_time"));
+                }
+                else {
+                    throw new SQLException("Creating user activity failed, no ID obtained.");
+                }
+            }
+
             connection.commit();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+
+        return entity;
     }
 
     @Override
-    public void update(UserActivity entity) throws DaoException {
+    public UserActivity update(UserActivity entity) throws DaoException {
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_ACTIVITY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_ACTIVITY, Statement.RETURN_GENERATED_KEYS)) {
             if(findById(entity.getId()).isPresent()) {
                 statement.setInt(1, entity.getUserId());
                 statement.setString(2, entity.getDescription());
                 statement.setTimestamp(3, entity.getDateTime());
                 statement.setInt(4, entity.getId());
                 statement.executeUpdate();
+
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        entity.setUserId(generatedKeys.getInt("user_id"));
+                        entity.setDescription(generatedKeys.getString("description"));
+                        entity.setDateTime(generatedKeys.getTimestamp("date_time"));
+                    }
+                    else {
+                        throw new SQLException("Updating user activity failed.");
+                    }
+                }
+
                 connection.commit();
             } else {
                 throw new UserActivityNotFoundException("user activity with id=" + entity.getId() + " doesn't exist");
@@ -147,6 +169,8 @@ public class UserActivityDaoImpl implements UserActivityDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+
+        return entity;
     }
 
     @Override

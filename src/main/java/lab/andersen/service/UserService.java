@@ -11,9 +11,9 @@ public interface UserService {
 
     User findById(int id) throws ServiceException;
 
-    void create(User user) throws ServiceException;
+    User create(User user) throws ServiceException;
 
-    void update(User user) throws ServiceException;
+    User update(User user) throws ServiceException;
 
     void delete(int id) throws ServiceException;
 }
