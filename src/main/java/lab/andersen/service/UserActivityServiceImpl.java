@@ -41,7 +41,7 @@ public class UserActivityServiceImpl implements UserActivityService {
             if (optionalUserActivity.isPresent()) {
                 return optionalUserActivity.get();
             } else {
-                throw new UserActivityNotFoundException("user activity with id=%d doesn't exist".formatted(id));
+                throw new UserActivityNotFoundException("user activity with id="+ id + " doesn't exist");
             }
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -78,6 +78,15 @@ public class UserActivityServiceImpl implements UserActivityService {
             userActivityDao.delete(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<UserActivity> findAllUsersActivitiesAddUserName() throws ServiceException {
+        try {
+            return userActivityDao.findAllAddUsername();
+        } catch (DaoException e) {
+            throw new RuntimeException(e);
         }
     }
 }

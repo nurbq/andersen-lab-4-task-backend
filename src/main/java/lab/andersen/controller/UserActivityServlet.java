@@ -41,7 +41,7 @@ public class UserActivityServlet extends HttpServlet {
         if(pathInfo == null || pathInfo.equals("/")) {
             List<UserActivity> activities = null;
             try {
-                activities = userActivityService.findAllUsersActivities();
+                activities = userActivityService.findAllUsersActivitiesAddUserName();
             } catch (ServiceException e) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;

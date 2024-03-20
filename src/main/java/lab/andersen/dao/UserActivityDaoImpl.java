@@ -164,7 +164,7 @@ public class UserActivityDaoImpl implements UserActivityDao {
 
                 connection.commit();
             } else {
-                throw new UserActivityNotFoundException("user activity with id=%d doesn't exist".formatted(entity.getId()));
+                throw new UserActivityNotFoundException("user activity with id=" + entity.getId() + " doesn't exist");
             }
         } catch (SQLException e) {
             throw new DaoException(e);
