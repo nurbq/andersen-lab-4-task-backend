@@ -48,6 +48,7 @@ public class UserControllerTest {
     @Test
     public void updateUserWithInvalidUser() throws Exception {
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader("invalid json")));
+        when(response.getWriter()).thenReturn(new PrintWriter(writer));
         userServlet.doPost(request, response);
         verify(userService, never()).create(any());
         verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST);

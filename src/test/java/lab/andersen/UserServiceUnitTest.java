@@ -73,7 +73,7 @@ public class UserServiceUnitTest {
     @Test
     public void createUser() throws DaoException, ServiceException {
         User user = new User();
-        doNothing().when(userDao).create(user);
+        //doNothing().when(userDao).create(user);
 
         userService.create(user);
 
