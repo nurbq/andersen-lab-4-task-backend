@@ -6,6 +6,7 @@ import lab.andersen.exception.DaoException;
 import lab.andersen.exception.ServiceException;
 import lab.andersen.exception.UserNotFoundException;
 import lab.andersen.model.User;
+import lab.andersen.service.UserService;
 import lab.andersen.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -86,5 +87,37 @@ public class UserServiceUnitTest {
         doThrow(DaoException.class).when(userDao).create(user);
 
         assertThrows(ServiceException.class, () -> userService.create(user));
+    }
+
+    @Test
+    public void updateUser() throws Exception {
+        User expectedUser = new User();
+        when(userDao.update(any())).thenReturn(expectedUser);
+        User user = userService.update(expectedUser);
+        verify(userDao, times(1)).update(expectedUser);
+        Assertions.assertEquals(expectedUser.getId(), user.getId());
+    }
+
+    @Test
+    public void updateUserThrowsException() throws Exception {
+        User user = new User();
+        doThrow(DaoException.class).when(userDao).update(any(User.class));
+        Assertions.assertThrows(ServiceException.class, () -> userService.update(user));
+        verify(userDao, times(1)).update(user);
+    }
+
+    @Test
+    public void deleteUser() throws Exception {
+        int userIdForDeletion = 1;
+        doNothing().when(userDao).delete(userIdForDeletion);
+        userService.delete(userIdForDeletion);
+        verify(userDao, times(1)).delete(userIdForDeletion);
+    }
+
+    @Test
+    public void deleteUserThrowsException() throws Exception {
+        doThrow(DaoException.class).when(userDao).delete(anyInt());
+        Assertions.assertThrows(ServiceException.class, () -> userService.delete(anyInt()));
+        verify(userDao, times(1)).delete(anyInt());
     }
 }
