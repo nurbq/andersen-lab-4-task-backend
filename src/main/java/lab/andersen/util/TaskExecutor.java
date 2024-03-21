@@ -25,7 +25,6 @@ public class TaskExecutor {
         executorService.schedule(taskWrapper, delay, TimeUnit.SECONDS);
     }
 
-
     private long computeNextDelay(int targetHour, int targetMin, int targetSec) {
         LocalDateTime localNow = LocalDateTime.now();
         ZoneId currentZone = ZoneId.systemDefault();
@@ -41,4 +40,5 @@ public class TaskExecutor {
     public void stop() {
         executorService.shutdownNow();
     }
+
 }

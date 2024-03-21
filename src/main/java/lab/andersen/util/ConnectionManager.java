@@ -29,14 +29,10 @@ public class ConnectionManager {
 
     @SneakyThrows
     public static Connection open() {
-        Connection connection = DriverManager.getConnection(
+        return DriverManager.getConnection(
                 PropertiesUtils.get(URL_KEY),
                 PropertiesUtils.get(USERNAME_KEY),
                 PropertiesUtils.get(PASSWORD_KEY)
         );
-        connection.setAutoCommit(false);
-        connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-        return connection;
     }
-
 }

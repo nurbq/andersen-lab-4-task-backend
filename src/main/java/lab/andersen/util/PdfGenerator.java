@@ -2,9 +2,9 @@ package lab.andersen.util;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
-import lab.andersen.dao.UserActivityDaoImpl;
-import lab.andersen.model.UserActivityShort;
-import lab.andersen.service.UserActivityServiceImpl;
+import lab.andersen.dao.UserActivityDao;
+import lab.andersen.dto.UserActivityShortDto;
+import lab.andersen.service.UserActivityService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +25,12 @@ public final class PdfGenerator {
     private static final String BASE_PATH = PropertiesUtils.get("pdf.base.url");
     @Getter
     private static final PdfGenerator INSTANCE = new PdfGenerator();
-    private static final UserActivityServiceImpl userActivityService = new UserActivityServiceImpl(new UserActivityDaoImpl());
+    private static final UserActivityService userActivityService = new UserActivityService(new UserActivityDao());
 
 
     @SneakyThrows
     public void generate() {
-
-        List<UserActivityShort> allTodayActivitiesFromDb = userActivityService.findAllTodayActivities();
+        List<UserActivityShortDto> allTodayActivitiesFromDb = userActivityService.findAllTodayActivities();
 
         Path pdfFullPath = Path.of(BASE_PATH, LocalDate.now() + ".pdf");
         Files.createDirectories(pdfFullPath.getParent());
@@ -46,7 +45,7 @@ public final class PdfGenerator {
 
         allTodayActivitiesFromDb.forEach(userActivity -> {
                     String userInformationText = userActivity.getUserName() + " " +
-                                                 userActivity.getDescription() + " " + userActivity.getDateTime().toLocalTime();
+                                                 userActivity.getDescription() + " " + userActivity.getDateTime();
                     listToPdf.add(userInformationText);
                 }
         );
