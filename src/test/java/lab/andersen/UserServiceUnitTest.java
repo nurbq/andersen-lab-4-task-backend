@@ -88,5 +88,4 @@ public class UserServiceUnitTest {
 
         assertThrows(ServiceException.class, () -> userService.create(user));
     }
-
 }
