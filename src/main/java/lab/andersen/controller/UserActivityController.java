@@ -56,7 +56,7 @@ public class UserActivityController extends FrontController {
         try (PrintWriter writer = response.getWriter()) {
             if (splitPath.length <= 2) {
                 List<UserActivityShortDto> activityByName = userActivityService.findAllByName(authenticatedUsername);
-                writer.write(gson.toJson(activityByName));
+                writer.print(gson.toJson(activityByName));
             } else {
                 int userActivityId = Integer.parseInt(splitPath[2]);
                 UserActivityDto userActivity = userActivityService.findById(userActivityId);
