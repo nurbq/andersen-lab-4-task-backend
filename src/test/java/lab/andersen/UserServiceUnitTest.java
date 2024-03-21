@@ -5,7 +5,6 @@ import lab.andersen.dao.UserDao;
 import lab.andersen.exception.DaoException;
 import lab.andersen.exception.ServiceException;
 import lab.andersen.exception.UserNotFoundException;
-import lab.andersen.model.DTO.UserDTO;
 import lab.andersen.model.User;
 import lab.andersen.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -36,13 +35,13 @@ public class UserServiceUnitTest {
 
     @Test
     public void findAllUsers_returnsUsers() throws DaoException, ServiceException {
-        List<UserDTO> expectedUsers = new ArrayList<>();
-        expectedUsers.add(new UserDTO(1, 20, "TestName1", "testname2"));
-        expectedUsers.add(new UserDTO(2, 21, "TestName2", "testname3"));
+        List<User> expectedUsers = new ArrayList<>();
+        expectedUsers.add(new User(1, 20, "TestName1", "testname2"));
+        expectedUsers.add(new User(2, 21, "TestName2", "testname3"));
 
         when(userDao.findAll()).thenReturn(expectedUsers);
 
-        List<UserDTO> actualUsers = userService.findAllUsers();
+        List<User> actualUsers = userService.findAllUsers();
 
         verify(userDao, times(1)).findAll();
 
@@ -51,11 +50,11 @@ public class UserServiceUnitTest {
 
     @Test
     public void findUserById_returnsUser() throws DaoException, ServiceException {
-        UserDTO expectedUser = new UserDTO(1, 15, "Biden", "Joe");
+        User expectedUser = new User(1, 15, "Biden", "Joe");
 
         when(userDao.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
 
-        UserDTO actualUser = userService.findById(expectedUser.getId());
+        User actualUser = userService.findById(expectedUser.getId());
 
         verify(userDao, times(1)).findById(expectedUser.getId());
 
