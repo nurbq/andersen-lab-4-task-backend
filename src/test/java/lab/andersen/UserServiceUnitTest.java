@@ -5,6 +5,7 @@ import lab.andersen.dao.UserDao;
 import lab.andersen.exception.DaoException;
 import lab.andersen.exception.ServiceException;
 import lab.andersen.exception.UserNotFoundException;
+import lab.andersen.model.DTO.UserDTO;
 import lab.andersen.model.User;
 import lab.andersen.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class UserServiceUnitTest {
@@ -34,13 +36,13 @@ public class UserServiceUnitTest {
 
     @Test
     public void findAllUsers_returnsUsers() throws DaoException, ServiceException {
-        List<User> expectedUsers = new ArrayList<>();
-        expectedUsers.add(new User(1, 20, "TestName1", "testname2"));
-        expectedUsers.add(new User(2, 21, "TestName2", "testname3"));
+        List<UserDTO> expectedUsers = new ArrayList<>();
+        expectedUsers.add(new UserDTO(1, 20, "TestName1", "testname2"));
+        expectedUsers.add(new UserDTO(2, 21, "TestName2", "testname3"));
 
         when(userDao.findAll()).thenReturn(expectedUsers);
 
-        List<User> actualUsers = userService.findAllUsers();
+        List<UserDTO> actualUsers = userService.findAllUsers();
 
         verify(userDao, times(1)).findAll();
 
@@ -49,11 +51,11 @@ public class UserServiceUnitTest {
 
     @Test
     public void findUserById_returnsUser() throws DaoException, ServiceException {
-        User expectedUser = new User(1, 15, "Biden", "Joe");
+        UserDTO expectedUser = new UserDTO(1, 15, "Biden", "Joe");
 
         when(userDao.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
 
-        User actualUser = userService.findById(expectedUser.getId());
+        UserDTO actualUser = userService.findById(expectedUser.getId());
 
         verify(userDao, times(1)).findById(expectedUser.getId());
 
@@ -64,10 +66,27 @@ public class UserServiceUnitTest {
     public void findUserById_throwsException() throws DaoException {
         when(userDao.findById(anyInt())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(UserNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> userService.findById(anyInt())
         );
     }
 
+    @Test
+    public void createUser() throws DaoException, ServiceException {
+        User user = new User();
+        //doNothing().when(userDao).create(user);
+
+        userService.create(user);
+
+        verify(userDao, times(1)).create(user);
+    }
+
+    @Test
+    public void createUser_DaoException() throws DaoException {
+        User user = new User();
+        doThrow(DaoException.class).when(userDao).create(user);
+
+        assertThrows(ServiceException.class, () -> userService.create(user));
+    }
 
 }

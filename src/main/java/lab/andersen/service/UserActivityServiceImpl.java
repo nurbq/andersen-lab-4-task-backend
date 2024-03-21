@@ -41,7 +41,7 @@ public class UserActivityServiceImpl implements UserActivityService {
             if (optionalUserActivity.isPresent()) {
                 return optionalUserActivity.get();
             } else {
-                throw new UserActivityNotFoundException("user activity with id=%d doesn't exist".formatted(id));
+                throw new UserActivityNotFoundException("user activity with id="+ id + " doesn't exist");
             }
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -49,21 +49,27 @@ public class UserActivityServiceImpl implements UserActivityService {
     }
 
     @Override
-    public void create(UserActivity userActivity) throws ServiceException {
+    public UserActivity create(UserActivity userActivity) throws ServiceException {
+        UserActivity createdUserActivity = null;
         try {
-            userActivityDao.create(userActivity);
+            createdUserActivity = userActivityDao.create(userActivity);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
+        return createdUserActivity;
     }
 
     @Override
-    public void update(UserActivity userActivity) throws ServiceException {
+    public UserActivity update(UserActivity userActivity) throws ServiceException {
+        UserActivity updatedUserActivity = null;
         try {
-            userActivityDao.update(userActivity);
+            updatedUserActivity = userActivityDao.update(userActivity);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
+        return updatedUserActivity;
     }
 
     @Override
@@ -72,6 +78,15 @@ public class UserActivityServiceImpl implements UserActivityService {
             userActivityDao.delete(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<UserActivity> findAllUsersActivitiesAddUserName() throws ServiceException {
+        try {
+            return userActivityDao.findAllAddUsername();
+        } catch (DaoException e) {
+            throw new RuntimeException(e);
         }
     }
 }
