@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import lab.andersen.dao.UserDaoImpl;
 import lab.andersen.exception.ServiceException;
+import lab.andersen.model.DTO.UserDTO;
 import lab.andersen.model.User;
 import lab.andersen.service.UserService;
 import lab.andersen.service.UserServiceImpl;
@@ -31,7 +32,7 @@ public class UserServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
-            List<User> users = null;
+            List<UserDTO> users = null;
             try {
                 users = userService.findAllUsers();
             } catch (ServiceException e) {
@@ -40,7 +41,7 @@ public class UserServlet extends HttpServlet {
             }
             out.print(gson.toJson(users));
         } else {
-            User user = null;
+            UserDTO user = null;
             try {
                 int id = Integer.parseInt(pathInfo.replace("/", ""));
                 user = userService.findById(id);
@@ -58,7 +59,7 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User createdUser = null;
+        UserDTO createdUser = null;
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -79,14 +80,14 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User updatedUser = null;
+        UserDTO updatedUser = null;
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
         BufferedReader in = req.getReader();
         String jsonUser = in.lines().collect(Collectors.joining());
-        User user = gson.fromJson(jsonUser, User.class);
+        UserDTO user = gson.fromJson(jsonUser, UserDTO.class);
         try {
             updatedUser = userService.update(user);
             out.print(gson.toJson(updatedUser));

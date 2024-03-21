@@ -4,6 +4,7 @@ import lab.andersen.dao.UserDao;
 import lab.andersen.exception.DaoException;
 import lab.andersen.exception.ServiceException;
 import lab.andersen.exception.UserNotFoundException;
+import lab.andersen.model.DTO.UserDTO;
 import lab.andersen.model.User;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() throws ServiceException {
-        List<User> users;
+    public List<UserDTO> findAllUsers() throws ServiceException {
+        List<UserDTO> users;
         try {
             users = userDao.findAll();
         } catch (DaoException e) {
@@ -29,9 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(int id) throws ServiceException {
+    public UserDTO findById(int id) throws ServiceException {
         try {
-            Optional<User> optionalUser = userDao.findById(id);
+            Optional<UserDTO> optionalUser = userDao.findById(id);
             if (optionalUser.isPresent()) {
                 return optionalUser.get();
             }
@@ -42,8 +43,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User user) throws ServiceException {
-        User createdUser = null;
+    public User findByUsername(String username) throws ServiceException {
+        try {
+            Optional<User> optionalUser = userDao.findByUsername(username);
+            if (optionalUser.isPresent()) {
+                return optionalUser.get();
+            }
+            throw new UserNotFoundException(String.format("User with Username=%s doesn't exist", username));
+        } catch (DaoException | UserNotFoundException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public UserDTO create(User user) throws ServiceException {
+        UserDTO createdUser = null;
         try {
             createdUser = userDao.create(user);
         } catch (DaoException e) {
@@ -54,8 +68,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) throws ServiceException {
-        User updatedUser = null;
+    public UserDTO update(UserDTO user) throws ServiceException {
+        UserDTO updatedUser = null;
         try {
             updatedUser = userDao.update(user);
         } catch (DaoException e) {

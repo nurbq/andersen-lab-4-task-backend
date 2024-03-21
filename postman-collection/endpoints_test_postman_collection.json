@@ -88,6 +88,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -109,65 +124,65 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"\r",
-							"pm.test(\"Response status code is 201\", function () {\r",
-							"    pm.expect(pm.response.code).to.equal(201);\r",
-							"});\r",
-							"\r",
-							"\r",
-							"pm.test(\"Response body has the required fields - id, age, surname, and name\", function () {\r",
-							"    const responseData = pm.response.json();\r",
-							"\r",
-							"    pm.expect(responseData).to.be.an('object');\r",
-							"    pm.expect(responseData).to.have.property('id');\r",
-							"    pm.expect(responseData).to.have.property('age');\r",
-							"    pm.expect(responseData).to.have.property('surname');\r",
-							"    pm.expect(responseData).to.have.property('name');\r",
-							"});\r",
-							"\r",
-							"\r",
-							"pm.test(\"Id is a non-negative integer\", function () {\r",
-							"    const responseData = pm.response.json();\r",
-							"    \r",
-							"    pm.expect(responseData.id).to.be.a('number');\r",
-							"    pm.expect(responseData.id).to.be.at.least(0);\r",
-							"});\r",
-							"\r",
-							"\r",
-							"pm.test(\"Age is a non-negative integer\", function () {\r",
-							"    const responseData = pm.response.json();\r",
-							"    \r",
-							"    pm.expect(responseData.age).to.be.a('number');\r",
-							"    pm.expect(responseData.age).to.be.at.least(0);\r",
-							"});\r",
-							"\r",
-							"\r",
-							"pm.test(\"Name and surname are non-empty strings\", function () {\r",
-							"    const responseData = pm.response.json();\r",
-							"\r",
-							"    pm.expect(responseData).to.be.an('object');\r",
-							"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
-							"    pm.expect(responseData.surname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Surname should not be empty\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Schema is valid\", function () {\r",
-							"  var schema = {\r",
-							"    type: \"object\",\r",
-							"    properties: {\r",
-							"      id: { type: \"number\" },\r",
-							"      age: { type: \"number\" },\r",
-							"      name: { type: \"string\", minLength: 1 },\r",
-							"      surname: { type: \"string\", minLength: 1 }\r",
-							"    },\r",
-							"    required: [\"id\", \"age\", \"name\", \"surname\"],\r",
-							"  };\r",
-							"\r",
-							"  var response = pm.response.json();\r",
-							"  pm.expect(tv4.validate(response, schema)).to.be.true;\r",
-							"});\r",
-							"\r",
-							"// Stores the userId in a collection variable\r",
-							"var userId = pm.response.json().id;\r",
+							"pm.test(\"Response status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body has the required fields - id, age, surname, and name\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('age');",
+							"    pm.expect(responseData).to.have.property('surname');",
+							"    pm.expect(responseData).to.have.property('name');",
+							"    pm.expect(responseData).to.have.property('username');",
+							"    pm.expect(responseData).to.have.property('password');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Id is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.id).to.be.a('number');",
+							"    pm.expect(responseData.id).to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Age is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.age).to.be.a('number');",
+							"    pm.expect(responseData.age).to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Name and surname are non-empty strings\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+							"    pm.expect(responseData.surname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Surname should not be empty\");",
+							"});",
+							"",
+							"pm.test(\"Schema is valid\", function () {",
+							"  var schema = {",
+							"    type: \"object\",",
+							"    properties: {",
+							"      id: { type: \"number\" },",
+							"      age: { type: \"number\" },",
+							"      name: { type: \"string\", minLength: 1 },",
+							"      surname: { type: \"string\", minLength: 1 }",
+							"    },",
+							"    required: [\"id\", \"age\", \"name\", \"surname\"],",
+							"  };",
+							"",
+							"  var response = pm.response.json();",
+							"  pm.expect(tv4.validate(response, schema)).to.be.true;",
+							"});",
+							"",
+							"// Stores the userId in a collection variable",
+							"var userId = pm.response.json().id;",
 							"pm.collectionVariables.set(\"userId\", userId);"
 						],
 						"type": "text/javascript",
@@ -176,11 +191,26 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Test\",\r\n    \"surname\": \"Test\",\r\n    \"age\": \"13\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Test\",\r\n    \"surname\": \"Test\",\r\n    \"age\": \"13\",\r\n    \"username\": \"username\",\r\n    \"password\": \"password\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -280,6 +310,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -374,6 +419,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -459,6 +519,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -539,6 +614,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -630,6 +720,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -707,6 +812,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -762,6 +882,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
@@ -812,6 +947,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
@@ -862,6 +1012,14 @@
 		{
 			"key": "activityId",
 			"value": ""
+		},
+		{
+			"key": "username",
+			"value": "admin"
+		},
+		{
+			"key": "password",
+			"value": "1234"
 		}
 	]
 }
